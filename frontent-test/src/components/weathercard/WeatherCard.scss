@@ -1,0 +1,53 @@
+@import "../../App.scss";
+
+.main {
+  width: 60%;
+  min-width: 320px;
+  max-width: 550px;
+  border-radius: 5px;
+  background-color: $PrimaryBackground;
+  display: flex;
+  /*   justify-content: space-between; */
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header {
+  background-color: $SecondaryBackground;
+  color: $PrimaryColor;
+  padding: 10px;
+  font-size: 28px;
+  border-radius: 10px;
+}
+
+.body {
+  width: 100%;
+  border-radius: 5px;
+  background-color: $PrimaryBackground;
+  display: flex;
+  /* justify-content: space-between; */
+  flex-direction: row;
+  justify-content: center;
+}
+
+.day {
+  padding: 15px;
+  color: $PrimaryColor;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.temp {
+  padding: 15px;
+  color: $PrimaryColor;
+  font-size: 18px;
+}
+
+.weather-icon {
+  width: auto;
+}
+#span {
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: bold;
+}

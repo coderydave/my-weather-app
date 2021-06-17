@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import WeatherCard from './components/weathercard/WeatherCard.jsx';
 import './App.scss';
 
 const API_URL = 'https://api.openweathermap.org/data/2.5'
@@ -9,6 +10,10 @@ function App() {
   const [lat, setLat] = useState([]);
   const [long, setLong] = useState([]);
   const [apiData, setApidata] = useState([]);
+
+  const refresh = () => {
+    window.location.reload();
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +37,16 @@ function App() {
 
   return (
     <div className="App">
-      <p>app</p>
+      {(typeof apiData.main == 'undefined') ? (
+        <button className="button" inverted color='blue' circular icon='refresh' onClick={refresh} >Refresh, get geolocation again.</button>
+      ) : (
+        <div></div>
+      )}
+      {(typeof apiData.main != 'undefined') ? (
+        <WeatherCard weatherData={apiData} />
+      ) : (
+        <div class="lds-dual-ring"></div>
+      )}
     </div>
   );
 }
