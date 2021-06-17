@@ -1,50 +1,71 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import WeatherCard from './components/weathercard/WeatherCard.jsx';
+import axios from 'axios';
 import './App.scss';
 
-const API_URL = 'https://api.openweathermap.org/data/2.5'
 const API_KEY = '27f0db16932c5a503fedac29d69506f2'
 
 
 function App() {
-  const [lat, setLat] = useState([]);
-  const [long, setLong] = useState([]);
-  const [apiData, setApidata] = useState([]);
+  const [weatherData, setWeatherData] = useState(null);
+  const [cityName, setCityName] = useState('');
+  const cityRef = useRef('');
 
   const refresh = () => {
     window.location.reload();
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      //Get geolocation
-      navigator.geolocation.getCurrentPosition(function (position) {
-        setLat(position.coords.latitude);
-        setLong(position.coords.longitude);
-      });
-      //Get weather data with geolocation cords
-      await fetch(`${API_URL}/weather/?lat=${lat}&lon=${long}&units=metric&APPID=${API_KEY}`)
-        .then(res => res.json())
-        .then(result => {
-          setApidata(result)
-          console.log(result);
-        });
-    }
-    fetchData();
-  }, [lat, long])
+  const getWeatherByCityName = useCallback(async () => {
+    const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityName}&appid=${API_KEY}`;
 
-  console.log("data", apiData);
+    try {
+      const { data } = await axios.get(url);
+      setWeatherData(data);
+      cityRef.current = data.name;
+    } catch (err) {
+      alert('No such settlement can be found!');
+      setCityName(cityRef.current);
+    }
+  }, [setWeatherData, cityName]);
+
+  const getWeatherByCoords = useCallback(
+    async position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const url = `https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+
+      try {
+        const { data } = await axios.get(url);
+        console.log(data);
+        cityRef.current = data.name;
+        setCityName(data.name);
+        setWeatherData(data);
+      } catch (err) {
+        alert('No such settlement can be found!');
+      }
+    },
+    [setWeatherData, setCityName]
+  );
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(getWeatherByCoords, console.error);
+  }, [getWeatherByCoords]);
 
   return (
     <div className="App">
-      <div className="title"><p>Header</p></div>
-      {(typeof apiData.main == 'undefined') ? (
-        <button className="button" inverted color='blue' circular icon='refresh' onClick={refresh} >Refresh, get geolocation again.</button>
-      ) : (
-        <div></div>
-      )}
-      {(typeof apiData.main != 'undefined') ? (
-        <WeatherCard weatherData={apiData} />
+      <div className="head">
+        <h2>Weather APP</h2>
+        <div className="title">
+          <input className="search-field"
+            placeholder="Budapest"
+            value={cityName}
+            onChange={e => setCityName(e.target.value)}
+          />
+          <button className="search-btn" onClick={getWeatherByCityName}>Search</button>
+        </div>
+      </div>
+      {weatherData ? (
+        <WeatherCard weatherData={weatherData} />
       ) : (
         <div class="lds-dual-ring"></div>
       )}
