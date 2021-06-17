@@ -37,6 +37,7 @@ function App() {
 
   return (
     <div className="App">
+      <div className="title"><p>Header</p></div>
       {(typeof apiData.main == 'undefined') ? (
         <button className="button" inverted color='blue' circular icon='refresh' onClick={refresh} >Refresh, get geolocation again.</button>
       ) : (
