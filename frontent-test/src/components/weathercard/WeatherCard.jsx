@@ -17,7 +17,7 @@ const WeatherCard = ({ weatherData }) => (
 
     <div className="body">
       <p className="temp">
-        Temprature: <span id="span"> {weatherData.main.temp} &deg;C </span>
+        Temprature: <span id="span"> {`${weatherData.main.temp}C°`} </span>
       </p>
       <p className="temp">
         Description:
