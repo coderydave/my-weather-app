@@ -2,7 +2,7 @@
 
 my-weather-app
 
-##Demo
+## Demo
 
 https://coderydave.github.io/my-weather-app/
 
